@@ -24,26 +24,10 @@ const OrderHistory = ({ userId = 1 }) => {
 
   return (
     <div className="max-w-4xl mx-auto space-y-10">
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-10 gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
         <h2 className="text-4xl font-black text-[#2D3436] rotate-1 bg-green-300 inline-block px-8 py-3 cartoon-card">
           📜 Mis Botines Comprados
         </h2>
-        <button 
-          onClick={async () => {
-            const { createOrder } = await import('../services/api');
-            await createOrder({
-              userId: 1,
-              items: [
-                { productId: 101, quantity: 2, unitPrice: 49.99 },
-                { productId: 205, quantity: 1, unitPrice: 19.90 }
-              ]
-            });
-            window.location.reload();
-          }}
-          className="bg-blue-500 text-white font-black px-6 py-3 rounded-xl border-[3px] border-[#2D3436] shadow-[4px_4px_0px_0px_rgba(45,52,54,1)] hover:translate-y-1 hover:shadow-none transition-all"
-        >
-          ➕ Crear Pedido de Prueba
-        </button>
       </div>
       
       <div className="space-y-12">
@@ -64,7 +48,7 @@ const OrderHistory = ({ userId = 1 }) => {
               <div className="flex flex-wrap gap-8 mb-8 pb-8 border-b-[3px] border-dashed border-gray-200 text-[#2D3436]">
                 <div>
                   <p className="text-xs font-black uppercase text-gray-400">¿Fecha del robo?</p>
-                  <p className="font-bold text-lg">{new Date(order.created_at).toLocaleDateString()}</p>
+                  <p className="font-bold text-lg">{new Date(order.createdAt || order.created_at).toLocaleDateString()}</p>
                 </div>
                 <div>
                   <p className="text-xs font-black uppercase text-gray-400">Inversión Total</p>
@@ -74,13 +58,13 @@ const OrderHistory = ({ userId = 1 }) => {
 
               <h4 className="font-black uppercase text-sm mb-4 tracking-tighter text-blue-500 underline decoration-4 decoration-yellow-300 underline-offset-4">Contenido del paquete:</h4>
               <ul className="space-y-4">
-                {order.order_details.map((detail) => (
+                {(order.details || order.order_details || []).map((detail) => (
                   <li key={detail.id} className="flex justify-between items-center bg-gray-50 p-4 rounded-2xl border-[2px] border-[#2D3436] shadow-[4px_4px_0px_0px_rgba(45,52,54,0.1)] hover:bg-white transition-colors">
                     <div>
-                      <p className="font-black text-[#2D3436]">ID: {detail.product_id.substring(0,8)}...</p>
-                      <p className="text-sm font-bold text-gray-500 italic">{detail.quantity} x ${detail.unit_price}</p>
+                      <p className="font-black text-[#2D3436]">ID: {String(detail.productId || detail.product_id).substring(0,8)}...</p>
+                      <p className="text-sm font-bold text-gray-500 italic">{detail.quantity} x ${detail.unitPrice || detail.unit_price}</p>
                     </div>
-                    <div className="text-2xl font-black text-[#2D3436]">${detail.line_total}</div>
+                    <div className="text-2xl font-black text-[#2D3436]">${detail.lineTotal || detail.line_total}</div>
                   </li>
                 ))}
               </ul>

@@ -6,6 +6,11 @@ import AdminDashboard from './components/AdminDashboard';
 
 function App() {
   const [view, setView] = useState('catalog');
+  const [cart, setCart] = useState([]);
+
+  const addToCart = (product) => {
+    setCart([...cart, product]);
+  };
 
   return (
     <div className="min-h-screen bg-[#FFDEE9] bg-gradient-to-br from-[#FFDEE9] to-[#B5FFFC]">
@@ -23,7 +28,7 @@ function App() {
           </div>
 
           {/* Nav Estilo Burbuja */}
-          <nav className="flex flex-wrap justify-center gap-4 bg-white/50 p-3 rounded-[2rem] border-[3px] border-[#2D3436]">
+          <nav className="flex flex-wrap justify-center gap-4 bg-white/50 p-3 rounded-[2rem] border-[3px] border-[#2D3436] items-center">
             {[
               { id: 'catalog', label: 'Tienda', icon: '🛍️', color: 'bg-blue-400' },
               { id: 'orders', label: 'Pedidos', icon: '📦', color: 'bg-green-400' },
@@ -40,13 +45,41 @@ function App() {
                 <span>{item.icon}</span> {item.label}
               </button>
             ))}
+
+            {/* BOTÓN DE CARRITO MÁGICO */}
+            {cart.length > 0 && (
+              <button 
+                onClick={async () => {
+                  const { createOrder } = await import('./services/api');
+                  
+                  // Agrupar items repetidos
+                  const itemMap = {};
+                  cart.forEach(p => {
+                    if (!itemMap[p._id]) itemMap[p._id] = { productId: parseInt(p._id), quantity: 0, unitPrice: p.price };
+                    itemMap[p._id].quantity += 1;
+                  });
+                  
+                  await createOrder({
+                    userId: 1,
+                    items: Object.values(itemMap)
+                  });
+                  
+                  setCart([]);
+                  setView('orders');
+                  window.location.reload();
+                }}
+                className="cartoon-btn flex items-center gap-2 text-sm bg-yellow-400 text-[#2D3436] font-black hover:bg-yellow-300 animate-pulse border-[2px] border-black"
+              >
+                <span>🛒</span> Pagar ({cart.length})
+              </button>
+            )}
           </nav>
         </div>
       </header>
 
       <main className="max-w-7xl mx-auto p-6">
         <div className="transition-all duration-500 transform">
-          {view === 'catalog' && <ProductList />}
+          {view === 'catalog' && <ProductList addToCart={addToCart} />}
           {view === 'orders' && <OrderHistory />}
           {view === 'profile' && <UserProfile />}
           {view === 'admin' && <AdminDashboard />}

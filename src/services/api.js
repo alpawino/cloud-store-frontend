@@ -16,13 +16,13 @@ const fetchAPI = async (endpoint, options = {}) => {
    MS 1: USUARIOS (Persona 1 - Python/MySQL)
 ========================================================= */
 export const getUserProfile = async (userId) => {
-  if (!API_CONFIG.USE_MOCKS) return fetchAPI(`${API_CONFIG.ENDPOINTS.USERS}/${userId}`);
+  // if (!API_CONFIG.USE_MOCKS) return fetchAPI(`${API_CONFIG.ENDPOINTS.USERS}/${userId}`);
   await delay(500);
   return users.find(u => u.id === userId);
 };
 
 export const updateUserProfile = async (userId, updateData) => {
-  if (!API_CONFIG.USE_MOCKS) return fetchAPI(`${API_CONFIG.ENDPOINTS.USERS}/${userId}`, { method: 'PUT', body: JSON.stringify(updateData) });
+  // if (!API_CONFIG.USE_MOCKS) return fetchAPI(`${API_CONFIG.ENDPOINTS.USERS}/${userId}`, { method: 'PUT', body: JSON.stringify(updateData) });
   await delay(700);
   return { ...users[0], ...updateData };
 };
@@ -31,13 +31,13 @@ export const updateUserProfile = async (userId, updateData) => {
    MS 2: PRODUCTOS (Persona 2 - Node.js/MongoDB)
 ========================================================= */
 export const getProducts = async () => {
-  if (!API_CONFIG.USE_MOCKS) return fetchAPI(API_CONFIG.ENDPOINTS.PRODUCTS);
+  // if (!API_CONFIG.USE_MOCKS) return fetchAPI(API_CONFIG.ENDPOINTS.PRODUCTS);
   await delay(600);
   return products;
 };
 
 export const getProductById = async (id) => {
-  if (!API_CONFIG.USE_MOCKS) return fetchAPI(`${API_CONFIG.ENDPOINTS.PRODUCTS}/${id}`);
+  // if (!API_CONFIG.USE_MOCKS) return fetchAPI(`${API_CONFIG.ENDPOINTS.PRODUCTS}/${id}`);
   await delay(400);
   return products.find(p => p._id === id);
 };
@@ -63,7 +63,7 @@ export const getOrderStatus = async (orderId) => {
 ========================================================= */
 export const getFullUserHistory = async (userId) => {
   // Redirigido temporalmente al microservicio de Órdenes para el Hito 1
-  if (!API_CONFIG.USE_MOCKS) return fetchAPI(API_CONFIG.ENDPOINTS.ORDERS);
+  if (!API_CONFIG.USE_MOCKS) return fetchAPI(`${API_CONFIG.ENDPOINTS.ORDERS}?userId=${userId}`);
   await delay(800);
   // Simula la agregación: Órdenes + información del perfil
   return orders.filter(order => order.user_id === userId);
@@ -79,13 +79,13 @@ export const getHistorySummary = async (userId) => {
    MS 5: ANALÍTICA (Persona 5 - Python/Athena)
 ========================================================= */
 export const getSalesByCategory = async () => {
-  if (!API_CONFIG.USE_MOCKS) return fetchAPI(`${API_CONFIG.ENDPOINTS.ANALYTICS}/sales-by-category`);
+  // if (!API_CONFIG.USE_MOCKS) return fetchAPI(`${API_CONFIG.ENDPOINTS.ANALYTICS}/sales-by-category`);
   await delay(900);
   return analyticsData.salesByCategory;
 };
 
 export const getMonthlyRevenue = async () => {
-  if (!API_CONFIG.USE_MOCKS) return fetchAPI(`${API_CONFIG.ENDPOINTS.ANALYTICS}/monthly-revenue`);
+  // if (!API_CONFIG.USE_MOCKS) return fetchAPI(`${API_CONFIG.ENDPOINTS.ANALYTICS}/monthly-revenue`);
   await delay(1200);
   return analyticsData.monthlyRevenue;
 };

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getProducts } from '../services/api';
 
-const ProductList = () => {
+const ProductList = ({ addToCart }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -62,6 +62,7 @@ const ProductList = () => {
                 </div>
                 
                 <button 
+                  onClick={() => addToCart && addToCart(product)}
                   disabled={product.status !== 'available'}
                   className={`cartoon-btn ${
                     product.status === 'available' 
