@@ -7,7 +7,7 @@ export const API_CONFIG = {
   USE_MOCKS: false,
 
 
-  BASE_URL: import.meta.env.VITE_API_GATEWAY_URL || 'http://3.87.171.243:8083/api',
+  BASE_URL: import.meta.env.VITE_API_GATEWAY_URL || 'http://54.92.215.220:8083/api',
 
   // Endpoints específicos por microservicio (Por si el Gateway enruta por paths)
   ENDPOINTS: {
