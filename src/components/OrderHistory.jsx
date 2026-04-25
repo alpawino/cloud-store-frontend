@@ -24,9 +24,27 @@ const OrderHistory = ({ userId = 1 }) => {
 
   return (
     <div className="max-w-4xl mx-auto space-y-10">
-      <h2 className="text-4xl font-black text-[#2D3436] mb-10 rotate-1 bg-green-300 inline-block px-8 py-3 cartoon-card">
-        📜 Mis Botines Comprados
-      </h2>
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-10 gap-4">
+        <h2 className="text-4xl font-black text-[#2D3436] rotate-1 bg-green-300 inline-block px-8 py-3 cartoon-card">
+          📜 Mis Botines Comprados
+        </h2>
+        <button 
+          onClick={async () => {
+            const { createOrder } = await import('../services/api');
+            await createOrder({
+              userId: 1,
+              items: [
+                { productId: 101, quantity: 2, unitPrice: 49.99 },
+                { productId: 205, quantity: 1, unitPrice: 19.90 }
+              ]
+            });
+            window.location.reload();
+          }}
+          className="bg-blue-500 text-white font-black px-6 py-3 rounded-xl border-[3px] border-[#2D3436] shadow-[4px_4px_0px_0px_rgba(45,52,54,1)] hover:translate-y-1 hover:shadow-none transition-all"
+        >
+          ➕ Crear Pedido de Prueba
+        </button>
+      </div>
       
       <div className="space-y-12">
         {orders.map((order) => (

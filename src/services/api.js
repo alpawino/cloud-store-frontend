@@ -62,7 +62,8 @@ export const getOrderStatus = async (orderId) => {
    Este servicio consume datos de Usuarios y Órdenes.
 ========================================================= */
 export const getFullUserHistory = async (userId) => {
-  if (!API_CONFIG.USE_MOCKS) return fetchAPI(`${API_CONFIG.ENDPOINTS.HISTORY}/user/${userId}`);
+  // Redirigido temporalmente al microservicio de Órdenes para el Hito 1
+  if (!API_CONFIG.USE_MOCKS) return fetchAPI(API_CONFIG.ENDPOINTS.ORDERS);
   await delay(800);
   // Simula la agregación: Órdenes + información del perfil
   return orders.filter(order => order.user_id === userId);
