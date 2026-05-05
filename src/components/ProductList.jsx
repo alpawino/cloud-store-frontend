@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { getProducts } from '../services/api';
 
+// Imágenes placeholder por categoría
+const categoryImages = {
+  'Electrónica': 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&fit=crop',
+  'Ropa': 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=300&fit=crop',
+  'Hogar': 'https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?w=400&h=300&fit=crop',
+};
+const defaultImage = 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=300&fit=crop';
+
 const ProductList = ({ addToCart }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -9,7 +17,8 @@ const ProductList = ({ addToCart }) => {
     const fetchProducts = async () => {
       try {
         const data = await getProducts();
-        setProducts(data);
+        // Limitar a 30 productos para no saturar la UI
+        setProducts(data.slice(0, 30));
       } catch (error) {
         console.error(error);
       } finally {
@@ -37,14 +46,14 @@ const ProductList = ({ addToCart }) => {
           <div key={product._id} className="cartoon-card overflow-hidden flex flex-col group">
             <div className="relative h-64 border-b-[3px] border-[#2D3436] bg-gray-100">
               <img 
-                src={product.image_url} 
+                src={categoryImages[product.category] || defaultImage} 
                 alt={product.name} 
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               />
               <div className="absolute top-4 left-4 bg-yellow-300 border-[2px] border-[#2D3436] px-3 py-1 rounded-full text-xs font-black shadow-[2px_2px_0px_0px_rgba(45,52,54,1)]">
-                {product.category}
+                {product.category || 'General'}
               </div>
-              {product.status !== 'available' && (
+              {product.stock <= 0 && (
                 <div className="absolute inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center">
                   <span className="bg-red-500 text-white font-black text-2xl px-6 py-2 border-[3px] border-white -rotate-12 shadow-xl">¡VOLÓ!</span>
                 </div>
@@ -55,6 +64,7 @@ const ProductList = ({ addToCart }) => {
               <h3 className="text-xl font-black text-[#2D3436] leading-tight mb-2 uppercase">
                 {product.name}
               </h3>
+              <p className="text-sm text-gray-500 mb-3">Stock: {product.stock} unidades</p>
               
               <div className="flex items-center justify-between mt-auto">
                 <div className="bg-green-300 border-[2px] border-[#2D3436] px-4 py-1 rounded-xl shadow-[3px_3px_0px_0px_rgba(45,52,54,1)]">
@@ -63,9 +73,9 @@ const ProductList = ({ addToCart }) => {
                 
                 <button 
                   onClick={() => addToCart && addToCart(product)}
-                  disabled={product.status !== 'available'}
+                  disabled={product.stock <= 0}
                   className={`cartoon-btn ${
-                    product.status === 'available' 
+                    product.stock > 0 
                       ? 'bg-blue-500 text-white hover:bg-blue-600' 
                       : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                   }`}

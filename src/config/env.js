@@ -1,20 +1,13 @@
 // src/config/env.js
-// IMPORTANTE: Nunca subas credenciales directamente aquí. Usa variables de entorno (.env).
 
+// IP Pública de la Máquina 1 (VM Producción)
+const EC2_IP = import.meta.env.VITE_EC2_IP || '52.91.40.58';
 
 export const API_CONFIG = {
-
   USE_MOCKS: false,
 
-
-  BASE_URL: import.meta.env.VITE_API_GATEWAY_URL || 'http://54.92.215.220:8083/api',
-
-  // Endpoints específicos por microservicio (Por si el Gateway enruta por paths)
-  ENDPOINTS: {
-    PRODUCTS: '/products',     // Microservicio 1 (MongoDB)
-    ORDERS: '/orders',         // Microservicio 2 (PostgreSQL)
-    USERS: '/users',           // Microservicio 3 (MySQL)
-    CHECKOUT: '/checkout',     // Microservicio 4 (Sin BD - Orquestador)
-    ANALYTICS: '/analytics'    // Microservicio 5 (Athena - Consultas SQL Analíticas)
-  }
+  // URLs individuales por microservicio (cada uno en su puerto)
+  USERS_URL: import.meta.env.VITE_USERS_URL || `http://${EC2_IP}:8000`,
+  PRODUCTS_URL: import.meta.env.VITE_PRODUCTS_URL || `http://${EC2_IP}:4000`,
+  ORDERS_URL: import.meta.env.VITE_ORDERS_URL || `http://${EC2_IP}:8083/api`,
 };

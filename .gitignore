@@ -1,3 +1,7 @@
 node_modules/
 gcli.bat
 orders-service/
+productos_db-main/
+usersService-main/
+proyecto.pdf
+docker-compose.yml
