@@ -63,13 +63,12 @@ export const getOrderStatus = async (orderId) => {
 ========================================================= */
 export const getFullUserHistory = async (userId) => {
   if (API_CONFIG.USE_MOCKS) { await delay(800); return orders.filter(order => order.user_id === userId); }
-  // Redirigido temporalmente al microservicio de Órdenes
-  return fetchAPI(API_CONFIG.ORDERS_URL, `/orders?userId=${userId}`);
+  return fetchAPI(API_CONFIG.HISTORY_URL, `/history/${userId}`);
 };
 
 export const getHistorySummary = async (userId) => {
   if (API_CONFIG.USE_MOCKS) { await delay(400); return { total_spent: 1779.49, order_count: 2 }; }
-  return fetchAPI(API_CONFIG.ORDERS_URL, `/orders?userId=${userId}`);
+  return fetchAPI(API_CONFIG.HISTORY_URL, `/history/${userId}/summary`);
 };
 
 /* =========================================================

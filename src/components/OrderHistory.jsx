@@ -2,17 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { getFullUserHistory } from '../services/api';
 
 const OrderHistory = ({ userId = 1 }) => {
-  const [orders, setOrders] = useState([]);
+  const [historyData, setHistoryData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchOrders = async () => {
+    const fetchHistory = async () => {
       try {
         const data = await getFullUserHistory(userId);
-        setOrders(data);
+        setHistoryData(data);
       } catch (error) { console.error(error); } finally { setLoading(false); }
     };
-    fetchOrders();
+    fetchHistory();
   }, [userId]);
 
   if (loading) return (
@@ -22,6 +22,11 @@ const OrderHistory = ({ userId = 1 }) => {
     </div>
   );
 
+  // Compatibilidad: si la respuesta viene del MS 4 (agregador) o directamente del MS 3 (órdenes)
+  const user = historyData?.user || null;
+  const orders = historyData?.orders || (Array.isArray(historyData) ? historyData : []);
+  const summary = historyData?.summary || null;
+
   return (
     <div className="max-w-4xl mx-auto space-y-10">
       <div className="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
@@ -29,6 +34,38 @@ const OrderHistory = ({ userId = 1 }) => {
           📜 Mis Botines Comprados
         </h2>
       </div>
+
+      {/* Tarjeta de Resumen del Agregador (MS 4) */}
+      {(user || summary) && (
+        <div className="cartoon-card bg-gradient-to-r from-blue-500 to-purple-600 p-8 text-white">
+          <p className="text-xs font-black uppercase opacity-70 mb-1">🔗 Datos agregados por el Microservicio de Historial</p>
+          <div className="flex flex-wrap gap-8 items-center">
+            {user && (
+              <div>
+                <p className="text-sm opacity-70">Cliente</p>
+                <p className="text-2xl font-black">{user.name}</p>
+                <p className="text-sm opacity-80">{user.email}</p>
+              </div>
+            )}
+            {summary && (
+              <>
+                <div className="bg-white/20 backdrop-blur-sm rounded-2xl px-6 py-4 border-[2px] border-white/30">
+                  <p className="text-xs opacity-70">Total Pedidos</p>
+                  <p className="text-3xl font-black">{summary.total_orders}</p>
+                </div>
+                <div className="bg-white/20 backdrop-blur-sm rounded-2xl px-6 py-4 border-[2px] border-white/30">
+                  <p className="text-xs opacity-70">Total Gastado</p>
+                  <p className="text-3xl font-black">${summary.total_spent}</p>
+                </div>
+                <div className="bg-white/20 backdrop-blur-sm rounded-2xl px-6 py-4 border-[2px] border-white/30">
+                  <p className="text-xs opacity-70">Promedio x Orden</p>
+                  <p className="text-3xl font-black">${summary.average_order}</p>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
       
       <div className="space-y-12">
         {orders.map((order) => (
