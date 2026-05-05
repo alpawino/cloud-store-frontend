@@ -48,10 +48,10 @@ const UserProfile = ({ userId = 1 }) => {
             </div>
             <div>
               <h2 className="text-4xl font-black text-[#2D3436] leading-none uppercase italic tracking-tighter">
-                ¡Hola, <span className="text-blue-600 underline decoration-yellow-400 decoration-8">{profile.username}</span>!
+                ¡Hola, <span className="text-blue-600 underline decoration-yellow-400 decoration-8">{profile.name}</span>!
               </h2>
               <p className="text-pink-500 font-black mt-2 uppercase tracking-tight bg-pink-50 px-3 py-1 inline-block border-[2px] border-pink-500 rounded-lg">
-                {profile.role} Legendario
+                Legendario
               </p>
             </div>
           </div>
