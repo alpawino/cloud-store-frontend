@@ -7,6 +7,7 @@ import AdminDashboard from './components/AdminDashboard';
 function App() {
   const [view, setView] = useState('catalog');
   const [cart, setCart] = useState([]);
+  const [currentUserId, setCurrentUserId] = useState(1);
 
   const addToCart = (product) => {
     setCart([...cart, product]);
@@ -45,6 +46,18 @@ function App() {
                 <span>{item.icon}</span> {item.label}
               </button>
             ))}
+            
+            {/* SELECTOR DE USUARIO DINÁMICO */}
+            <div className="flex items-center gap-2 bg-yellow-100 px-4 py-2 rounded-[1rem] border-[2px] border-black shadow-sm">
+              <span className="font-black text-[#2D3436] text-sm uppercase">👤 ID:</span>
+              <input 
+                type="number" 
+                value={currentUserId}
+                onChange={(e) => setCurrentUserId(Number(e.target.value) || 1)}
+                min="1"
+                className="w-16 p-1 text-center rounded border-2 border-gray-400 font-bold outline-none focus:border-blue-500 bg-white"
+              />
+            </div>
 
             {/* BOTÓN DE CARRITO MÁGICO */}
             {cart.length > 0 && (
@@ -60,7 +73,7 @@ function App() {
                   });
                   
                   await createOrder({
-                    userId: 1,
+                    userId: currentUserId,
                     items: Object.values(itemMap)
                   });
                   
@@ -80,8 +93,8 @@ function App() {
       <main className="max-w-7xl mx-auto p-6">
         <div className="transition-all duration-500 transform">
           {view === 'catalog' && <ProductList addToCart={addToCart} />}
-          {view === 'orders' && <OrderHistory />}
-          {view === 'profile' && <UserProfile />}
+          {view === 'orders' && <OrderHistory userId={currentUserId} />}
+          {view === 'profile' && <UserProfile userId={currentUserId} />}
           {view === 'admin' && <AdminDashboard />}
         </div>
       </main>
